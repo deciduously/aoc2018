@@ -1,3 +1,3 @@
 # aoc2018
 
-Advent of COde 2018 - FSharp
+Advent of Code 2018 - FSharp
