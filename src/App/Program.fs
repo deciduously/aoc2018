@@ -1,5 +1,4 @@
 ﻿open System
-open Day1
 
 [<EntryPoint>]
 let main argv =
@@ -8,9 +7,14 @@ let main argv =
     else 
         match argv.[0] with
             | "day1" ->
-                let inputFile = "..\..\inputs/day1.txt"
-                day1Part1 inputFile |> printfn "Part 1 result: %i"
-                day1Part2 inputFile |> printfn "Part 2 result: %i"
+                printfn "Day 1:"
+                let inputFile = "..\..\inputs\day1.txt"
+                Day1.part1.execute inputFile |> printfn "Part 1 result: %i"
+                Day1.part2.execute inputFile |> printfn "Part 2 result: %i"
+            | "day2" ->
+                printfn "Day 2: "
+                let inputFile = "..\..\inputs\sample2.txt"
+                Day2.part1.execute inputFile |> printfn "Part 1 result: %i"
             | _ -> printfn "Unknown day"
 
     0 // return an integer exit code

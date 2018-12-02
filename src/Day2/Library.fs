@@ -1,5 +1,6 @@
 namespace Day2
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
+module part1 =
+    let execute fileName =
+        printfn "Hello %s" fileName
+        0
