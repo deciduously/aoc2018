@@ -20,6 +20,7 @@ let main argv =
       printfn "Day 3:"
       let inputFile = "..\..\inputs\day3.txt"
       Day3.part1.execute inputFile |> printfn "Part 1 result: %i"
+      Day3.part2.execute inputFile |> printfn "Part 2 result: %i"
     | _ -> printfn "Unknown day"
 
   0 // return an integer exit code
