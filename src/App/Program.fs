@@ -16,6 +16,10 @@ let main argv =
       let inputFile = "..\..\inputs\day2.txt"
       Day2.part1.execute inputFile |> printfn "Part 1 result: %i"
       Day2.part2.execute inputFile |> printfn "Part 2 result: %A"
+    | "day3" ->
+      printfn "Day 3:"
+      let inputFile = "..\..\inputs\day3.txt"
+      Day3.part1.execute inputFile |> printfn "Part 1 result: %i"
     | _ -> printfn "Unknown day"
 
   0 // return an integer exit code
