@@ -50,8 +50,6 @@ module util =
   let second (_, b, _) = b
   let third (_, _, c) = c
 
-module part1 =
-  open util
   type MinuteCounts = Map<int, int>
 
   let getHighest minuteCounts =
@@ -77,7 +75,7 @@ module part1 =
     // increment TotalAsleep
     // increment each MinuteCount that falls between sleep inclusive and wake non-inclusive
     let timeAsleep = wake - sleep
-    let eachMinute = [ for i in sleep..wake do yield i]
+    let eachMinute = [ for i in sleep..wake - 1 do yield i ]
     { TotalAsleep = sleepLogEntry.TotalAsleep + timeAsleep;
       MinuteCounts = List.fold tickMinute sleepLogEntry.MinuteCounts eachMinute }
 
@@ -103,14 +101,32 @@ module part1 =
         | LogEntry.Nonsense -> s)
       (None, None, new Map<int, SingleEntry> (Seq.empty)) // Active Badge, Minute Fell Asleep, SleepLog
       log
+    
+  let getSleepLog fileName =
+    getContents fileName |> scrapeLog |> processLog |> third
+
+module part1 =
+  open util
 
   let getLongestAsleep sleepLog =
   // also save highest minute
-    third sleepLog |> Map.fold (fun s k v -> if v.TotalAsleep > first s then (v.TotalAsleep, k, getHighest v.MinuteCounts) else s) (0, 0, (0, 0))
+    sleepLog |> Map.fold (fun s k v -> if v.TotalAsleep > first s then (v.TotalAsleep, k, getHighest v.MinuteCounts) else s) (0, 0, (0, 0))
 
   let execute fileName =
-    let res = getContents fileName |> scrapeLog |> processLog |> getLongestAsleep
+    let res = getSleepLog fileName |> getLongestAsleep
     (second res) * (fst (third res))
 
 module part2 =
-  let execute fileName = 0
+  open util
+// also a fold.  store guard id, and guess with (minute, freq)
+  let getMostFrequentAsleep sleepLog =
+    sleepLog |> Map.fold (fun s k (v: SingleEntry) ->
+      let h = getHighest v.MinuteCounts
+      if snd h >= snd (snd s) then
+        (k, h)
+      else s
+      ) (0, (0, 0))
+
+  let execute fileName =
+    let res = getSleepLog fileName |> getMostFrequentAsleep
+    (fst res) * (fst (snd res))
