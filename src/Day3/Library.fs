@@ -1,7 +1,5 @@
 namespace Day3
 open System.Text.RegularExpressions
-open System.Data.SqlTypes
-open System.Runtime.Serialization
 
 module util =
   // cell contents are a list of ClaimIds
@@ -24,7 +22,6 @@ module util =
       Array2D.mapi (fun i j cell -> if fallsInClaim claimX claimY rows columns i j then cell @ [claimNum] else cell) g
     else
       g
-
   let readClaims fileName =
     System.IO.File.ReadLines(fileName) |> List.ofSeq
 
@@ -43,9 +40,10 @@ module part1 =
 module part2 =
   // check if a given claim has any overlaps
   let noOverlaps claim g =
-    g |> Seq.filter (fun cell -> List.contains claim cell) |> Seq.forall (fun cell -> List.length cell = 1)
+    g
+    |> Seq.filter (fun cell -> List.contains claim cell)
+    |> Seq.forall (fun cell -> List.length cell = 1)
     
-// fold into a guess
   let execute fileName =
     let claims = util.readClaims fileName
                 |> Seq.map (fun el ->
@@ -53,6 +51,5 @@ module part2 =
                   matches.Groups.["ClaimNum"].Value |> System.Convert.ToInt32)
                 |> List.ofSeq
     let g = util.applyClaims fileName
-    List.fold (fun s el -> if noOverlaps el g then s @ [el] else s) [] claims
-    |> printfn "%A"
-    0
+    let res = List.fold (fun s el -> if noOverlaps el g then s @ [el] else s) [] claims
+    res.[0]

@@ -7,6 +7,7 @@
     <ProjectReference Include="..\Day1\Day1.fsproj" />
     <ProjectReference Include="..\Day2\Day2.fsproj" />
     <ProjectReference Include="..\Day3\Day3.fsproj" />
+    <ProjectReference Include="..\Day4\Day4.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.fs" />
