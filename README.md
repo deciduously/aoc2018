@@ -2,7 +2,7 @@
 
 Advent of Code 2018 - FSharp
 
-## Requiremets
+## Requirements
 
 [.Net Core](https://dotnet.microsoft.com/download).  I developed/tested on Windows and Linux, shouldn't matter.
 
