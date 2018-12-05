@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Day2\Day2.fsproj" />
     <ProjectReference Include="..\Day3\Day3.fsproj" />
     <ProjectReference Include="..\Day4\Day4.fsproj" />
+    <ProjectReference Include="..\Day5\Day5.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="inputs\sample3.txt">
@@ -35,6 +36,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="inputs\real1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="inputs\sample5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="inputs\day5.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Program.fs" />
