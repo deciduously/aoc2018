@@ -53,3 +53,16 @@ module part2 =
     let g = util.applyClaims fileName
     let res = List.fold (fun s el -> if noOverlaps el g then s @ [el] else s) [] claims
     res.[0]
+
+module run =
+  let sample = "inputs/sample3.txt"
+  let real = "inputs/real3.txt"
+  let displayResults inputFile =
+    part1.execute inputFile |> printfn "Part 1 result: %i"
+    part2.execute inputFile |> printfn "Part 2 result: %i"
+
+  let runBoth =
+    printfn "Sample:"
+    displayResults sample
+    printfn "Real:"
+    displayResults real

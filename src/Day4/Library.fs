@@ -60,20 +60,12 @@ module util =
       MinuteCounts : MinuteCounts }
   type SleepLog = Map<int, SingleEntry>
   
-  // it's going to be a fold.
-  // The Acc is a tuple with a growing list of SleepLogs, the current Active Badge, and an optional minute fell asleep
-  // On each , if its a NewGuard update the Active Badge
-  // If it's a Sleep, store Some <minute asleep>
-  // If it's a Wake, store None and bump each minute elapsed in the SleepLog
-
   let tickMinute (mcs: MinuteCounts) m =
     match (mcs.TryFind m) with
     | Some x -> Map.add m (x + 1) mcs
     | None -> Map.add m 1 mcs
 
   let addRangeToLog sleep wake sleepLogEntry =
-    // increment TotalAsleep
-    // increment each MinuteCount that falls between sleep inclusive and wake non-inclusive
     let timeAsleep = wake - sleep
     let eachMinute = [ for i in sleep..wake - 1 do yield i ]
     { TotalAsleep = sleepLogEntry.TotalAsleep + timeAsleep;
@@ -103,14 +95,17 @@ module util =
       log
     
   let getSleepLog fileName =
-    getContents fileName |> scrapeLog |> processLog |> third
+    getContents fileName
+    |> scrapeLog
+    |> processLog
+    |> third
 
 module part1 =
   open util
 
   let getLongestAsleep sleepLog =
-  // also save highest minute
-    sleepLog |> Map.fold (fun s k v -> if v.TotalAsleep > first s then (v.TotalAsleep, k, getHighest v.MinuteCounts) else s) (0, 0, (0, 0))
+    sleepLog
+    |> Map.fold (fun s k v -> if v.TotalAsleep > first s then (v.TotalAsleep, k, getHighest v.MinuteCounts) else s) (0, 0, (0, 0))
 
   let execute fileName =
     let res = getSleepLog fileName |> getLongestAsleep
@@ -118,7 +113,6 @@ module part1 =
 
 module part2 =
   open util
-// also a fold.  store guard id, and guess with (minute, freq)
   let getMostFrequentAsleep sleepLog =
     sleepLog |> Map.fold (fun s k (v: SingleEntry) ->
       let h = getHighest v.MinuteCounts
@@ -130,3 +124,16 @@ module part2 =
   let execute fileName =
     let res = getSleepLog fileName |> getMostFrequentAsleep
     (fst res) * (fst (snd res))
+
+module run =
+  let sample = "inputs/sample4.txt"
+  let real = "inputs/real4.txt"
+  let displayResults inputFile =
+    part1.execute inputFile |> printfn "Part 1 result: %i"
+    part2.execute inputFile |> printfn "Part 2 result: %i"
+
+  let runBoth =
+    printfn "Sample:"
+    displayResults sample
+    printfn "Real:"
+    displayResults real

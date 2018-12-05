@@ -32,3 +32,16 @@ module part2 =
   let execute fileName =
     let freqs = util.getFrequencies fileName
     addFreqWithState 0 (new Set<int> (Seq.empty)) freqs freqs
+
+module run =
+  let sample = "inputs/sample1.txt"
+  let real = "inputs/real1.txt"
+  let displayResults inputFile =
+    part1.execute inputFile |> printfn "Part 1 result: %i"
+    part2.execute inputFile |> printfn "Part 2 result: %i"
+
+  let runBoth =
+    printfn "Sample:"
+    displayResults sample
+    printfn "Real:"
+    displayResults real

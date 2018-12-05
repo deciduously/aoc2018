@@ -8,4 +8,6 @@
     <Compile Include="Library.fs" />
   </ItemGroup>
 
+  <ItemGroup />
+
 </Project>

@@ -80,4 +80,17 @@ module part2 =
   let execute fileName =
     let boxIds = util.getBoxIds fileName
     findWinner boxIds
-    
+
+module run =
+  let real = "inputs/real2.txt"
+  let displayResults inputFile =
+    part1.execute inputFile |> printfn "Part 1 result: %i"
+    part2.execute inputFile |> printfn "Part 2 result: %A"
+
+  let runBoth =
+    printfn "Sample1:"
+    part1.execute "inputs/sample2-1.txt" |> printfn "Part 1 result: %i"
+    printfn "Sample2:"
+    part2.execute "inputs/sample2-2.txt" |> printfn "Part 2 result: %A"
+    printfn "Real:"
+    displayResults real

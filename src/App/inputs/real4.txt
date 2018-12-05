@@ -1,4 +1,4 @@
-[1518-03-18 00:03] Guard #3529 begins shift
+﻿[1518-03-18 00:03] Guard #3529 begins shift
 [1518-04-26 00:55] wakes up
 [1518-04-30 00:46] wakes up
 [1518-10-28 00:01] Guard #2011 begins shift
