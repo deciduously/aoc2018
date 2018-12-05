@@ -18,7 +18,7 @@ let main argv =
      Day4.run.runBoth
     | "day5" ->
      printfn "Day 5:"
-     Day5.run.runBoth
+     Day5.runRedo.runBoth
     | _ -> printfn "Unknown day"
 
   0 // return an integer exit code
