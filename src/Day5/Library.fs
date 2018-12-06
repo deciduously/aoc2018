@@ -43,8 +43,8 @@ module part2redo =
   let execute inputFile =
      let input = getInput inputFile
      let allPairs = [ for l in 'a' .. 'z' do yield l ]
-     let res = List.map (fun el -> (el, reactQuickly (cleanInput el input))) allPairs
-     List.sortBy (fun el -> snd el) res
+     List.map (fun el -> (el, reactQuickly (cleanInput el input))) allPairs
+     |> List.sortBy (fun el -> snd el)
      |> List.head
      |> snd
 

@@ -2,7 +2,7 @@
   "profiles": {
     "App": {
       "commandName": "Project",
-      "commandLineArgs": "day5"
+      "commandLineArgs": "day6"
     }
   }
 }

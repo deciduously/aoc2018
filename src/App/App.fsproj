@@ -9,8 +9,15 @@
     <ProjectReference Include="..\Day3\Day3.fsproj" />
     <ProjectReference Include="..\Day4\Day4.fsproj" />
     <ProjectReference Include="..\Day5\Day5.fsproj" />
+    <ProjectReference Include="..\Day6\Day6.fsproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="inputs\real6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="inputs\sample6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="inputs\sample3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

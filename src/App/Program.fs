@@ -19,6 +19,9 @@ let main argv =
     | "day5" ->
      printfn "Day 5:"
      Day5.runRedo.runBoth
+    | "day6" ->
+     printfn "Day 6:"
+     Day6.run.runBoth
     | _ -> printfn "Unknown day"
 
   0 // return an integer exit code
