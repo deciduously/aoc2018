@@ -5,11 +5,9 @@ module util =
     System.IO.File.ReadAllText(inputFile) |> List.ofSeq
 
   let doesReact first second =
-    if System.Char.ToUpper first = System.Char.ToUpper second then
-      first <> second
-    else
-      false
+    (System.Char.ToUpper first = System.Char.ToUpper second) && first <> second
 
+  // unused and very slow - left for posterity
   let rec reactString altered result input =
     match input with
     | [] -> if altered then reactString false "" (string result |> List.ofSeq) else result
@@ -31,28 +29,6 @@ module util =
       | None -> Array.append s [| c |]) [| |] input
         |> Array.length
 
-module part1 =
-  open util
-
-  let execute inputFile =
-    getInput inputFile
-    |> List.ofSeq
-    |> reactString false ""
-    |> String.length
-
-module part2 =
-  open util
-  let cleanInput targetPair input =
-    List.filter (fun el -> el <> System.Char.ToUpper targetPair && el <> System.Char.ToLower targetPair) input
-  let execute inputFile =
-     let input = getInput inputFile
-     let allPairs = [ for l in 'a' .. 'z' do yield l ]
-     let res = List.map (fun el -> (el, reactString false "" (cleanInput el input))) allPairs
-     List.sortBy (fun el -> String.length (snd el)) res
-     |> List.head
-     |> snd
-     |> String.length
-
 module part1redo =
   open util
   let execute inputFile =
@@ -71,19 +47,6 @@ module part2redo =
      List.sortBy (fun el -> snd el) res
      |> List.head
      |> snd
-
-module run =
-  let sample = "inputs/sample5.txt"
-  let real = "inputs/day5.txt"
-  let displayResults inputFile =
-    part1.execute inputFile |> printfn "Part 1 result: %i"
-    part2.execute inputFile |> printfn "Part 2 result: %A"
-
-  let runBoth =
-    printfn "Sample:"
-    displayResults sample
-    printfn "Real:"
-    displayResults real
 
 module runRedo =
   let sample = "inputs/sample5.txt"
