@@ -17,13 +17,10 @@ module util =
   let manhattanDistance (origin: int * int) (target: int * int) =
     System.Math.Abs (fst origin - fst target) + System.Math.Abs (snd origin - snd target)
 
-  let gridSize (points: Coord list) =
-    let across = List.map getX points |> List.sort |> List.rev |> List.head
-    let down = List.map getY points |> List.sort |> List.rev |> List.head
-    (across + 1, down + 1)
+  let maxBy f l = List.map f l |> List.sort |> List.rev |> List.head
   
   let distanceGrid points =
-    let (across, down) = gridSize points
+    let (across, down) = (maxBy getX points + 1, maxBy getY points + 1)
     Array2D.mapi (fun down across c ->
       let nearest =
         points
@@ -32,7 +29,7 @@ module util =
         // get nearest distance
         |> Map.fold (fun (s: (int * int) list) k v -> if v < snd s.[0] then [(k, v)] else if v = snd s.[0] then s @ [(k, v)] else s) [0, across * down]
       if List.exists (fun el -> (snd el) = (across, down)) points then
-        labels.[fst nearest.[0] + 26]
+        labels.[(fst nearest.[0] + 26) % List.length labels]
       else
         if List.length nearest > 1 then
           c
@@ -47,14 +44,16 @@ module util =
       | Some x -> Map.add c (x + 1) map
       | None -> Map.add c 1 map
 
-  let largetArea distanceGrid =
-    distanceGrid
-    |> Seq.cast<char>
-    |> Seq.fold (fun s el -> tickMap el s false) (new Map<char, int> (Seq.empty))
+  let largestArea dg =
+    let mutable arrMap = new Map<char, int> (Seq.empty)
+    Array2D.iteri (fun down across c ->
+      let lower_c = System.Char.ToLower c
+      if down = 0 || down = Array2D.length1 dg - 1 || across = 0 || across = Array2D.length2 dg - 1 then
+        arrMap <- tickMap lower_c arrMap true
+      else arrMap <- tickMap lower_c arrMap false) dg
+    arrMap
     |> Map.toList
-    |> List.sortBy snd
-    |> List.head
-    |> snd
+    |> maxBy snd
 
   let renderGrid dg = 
     Array2D.iteri (fun x y el ->
@@ -69,7 +68,7 @@ module part1 =
   let execute inputFile =
     let dg = scrapeCoords inputFile |> distanceGrid
     renderGrid dg
-    largetArea dg
+    largestArea dg
   
 module part2 =
   let execute inputFile = 0
@@ -85,5 +84,5 @@ module run =
   let runBoth =
     printfn "Sample:"
     displayResults sample
-    //printfn "Real:"
-    //displayResults real
+    printfn "Real:"
+    displayResults real
