@@ -8,8 +8,6 @@ module util =
       (i, (coords.[0] |> System.Convert.ToInt32, coords.[1] |> System.Convert.ToInt32)))
     |> List.ofSeq
 
-  let labels = [ for c in ['a' .. 'z'] @ ['A' .. 'Z'] do yield c ]
-
   type Coord = int * (int * int)
   let getX = snd >> fst
   let getY = snd >> snd
@@ -24,40 +22,41 @@ module util =
     Array2D.mapi (fun down across c ->
       let nearest =
         points
-        // get all distances
         |> List.fold (fun s el -> Map.add (fst el) (manhattanDistance (snd el) (across, down)) s) (new Map<int, int> (Seq.empty))
-        // get nearest distance
-        |> Map.fold (fun (s: (int * int) list) k v -> if v < snd s.[0] then [(k, v)] else if v = snd s.[0] then s @ [(k, v)] else s) [0, across * down]
+        |> Map.fold (fun (s: (int * int) list) k v -> if v < snd s.[0] then [(k, v)] else if v = snd s.[0] then [(k, v)] @ s else s) [(-1, across * down)]
       if List.exists (fun el -> (snd el) = (across, down)) points then
-        labels.[(fst nearest.[0] + 26) % List.length labels]
-      else
-        if List.length nearest > 1 then
-          c
-        else
-          labels.[fst nearest.[0]]) (Array2D.create down across '.')
+        fst nearest.[0]
+      else if List.length nearest > 1 then c else fst nearest.[0]) (Array2D.create down across -1)
   
-  let tickMap c (map: Map<char, int>) edge =
-    if edge then
-      Map.add c 0 map
-    else
+  let tickMap c (map: Map<int, int>) =
       match (map.TryFind c) with
       | Some x -> Map.add c (x + 1) map
       | None -> Map.add c 1 map
 
-  let largestArea dg =
-    let mutable arrMap = new Map<char, int> (Seq.empty)
-    Array2D.iteri (fun down across c ->
-      let lower_c = System.Char.ToLower c
-      if down = 0 || down = Array2D.length1 dg - 1 || across = 0 || across = Array2D.length2 dg - 1 then
-        arrMap <- tickMap lower_c arrMap true
-      else arrMap <- tickMap lower_c arrMap false) dg
-    arrMap
-    |> Map.toList
-    |> maxBy snd
+  // Can you do findFinite and getAreas in one pass?
 
-  let renderGrid dg = 
-    Array2D.iteri (fun x y el ->
-      printf "%c" el
+  let findFinite dg areaMap =
+    let mutable candidates = areaMap;
+    Array2D.iteri (fun down across id ->
+      if down = 0 || down = Array2D.length1 dg - 1 || across = 0 || across = Array2D.length2 dg - 1 then
+        candidates <- Map.remove id candidates
+      else
+        ()) dg
+    candidates
+
+  let getAreas dg =
+    let mutable arrMap = new Map<int, int> (Seq.empty)
+    Array2D.iter (fun i -> arrMap <- tickMap i arrMap) dg
+    let res = findFinite dg arrMap |> Map.toList
+    printfn "%A" res
+    res |> maxBy snd
+
+  // only used to debug on the sample
+  // breaks on the whole anyway - there more than 26 points!
+  let renderGrid dg =
+    let labels = [ for c in ['a' .. 'z'] @ ['A' .. 'Z'] do yield c ]
+    Array2D.iteri (fun _ y el ->
+      if el < 0 then printf "." else printf "%c" labels.[el]
       if y = Array2D.length2 dg - 1 then
         printf "\n"
       else
@@ -67,8 +66,8 @@ module part1 =
   open util
   let execute inputFile =
     let dg = scrapeCoords inputFile |> distanceGrid
-    renderGrid dg
-    largestArea dg
+    //renderGrid dg
+    getAreas dg
   
 module part2 =
   let execute inputFile = 0
@@ -84,5 +83,5 @@ module run =
   let runBoth =
     printfn "Sample:"
     displayResults sample
-    printfn "Real:"
-    displayResults real
+    //printfn "Real:"
+    //displayResults real
