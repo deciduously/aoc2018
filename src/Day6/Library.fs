@@ -14,29 +14,23 @@ module util =
   let getX = snd >> fst
   let getY = snd >> snd
   let eqCoord origin target = fst origin = fst target && snd origin = snd target
-  //   let eqCoord origin target = fst origin = fst target && snd origin snd target
-  //   this was your problem for like 20 minutes after you had it ^^
 
   let manhattanDistance (origin: int * int) (target: int * int) =
     System.Math.Abs (fst origin - fst target) + System.Math.Abs (snd origin - snd target)
 
   let gridSize (points: Coord list) =
-    let xs = List.sortBy getX points
-    let ys = List.sortBy getY points
-    let xMin = xs |> List.head |> getX
-    let xMax = xs |> List.rev |> List.head |> getX
-    let yMin = ys |> List.head |> getY
-    let yMax = ys |> List.rev |> List.head |> getY
-    (System.Math.Abs xMax - System.Math.Abs xMin + 1, System.Math.Abs yMax - System.Math.Abs yMin + 1)
+    let across = List.map getX points |> List.sort |> List.rev |> List.head
+    let down = List.map getY points |> List.sort |> List.rev |> List.head
+    (across, down)
   
   let distanceGrid points =
-    let (x, y) = gridSize points
-    Array2D.mapi (fun x y c ->
+    let (across, down) = gridSize points
+    Array2D.mapi (fun down across c ->
       let nearest =
         points
-        |> List.fold (fun s el -> Map.add (fst el) (manhattanDistance (y, x) (snd el)) s) (new Map<int, int> (Seq.empty))
-        |> Map.fold (fun s k v -> if v < snd s then (k, v) else s) (x, y)
-      if List.exists (fun el -> eqCoord (snd el) (y, x)) points then labels.[fst nearest + 26] else labels.[fst nearest]) (Array2D.create x y '.')
+        |> List.fold (fun s el -> Map.add (fst el) (manhattanDistance (across, down) (snd el)) s) (new Map<int, int> (Seq.empty))
+        |> Map.fold (fun s k v -> if v < snd s then (k, v) else s) (across, System.Math.Max(across, down))
+      if List.exists (fun el -> eqCoord (snd el) (across, down)) points then labels.[fst nearest + 26] else labels.[fst nearest]) (Array2D.create down across '.')
   
   let tickMap c (map: Map<char, int>) =
     match (map.TryFind c) with
